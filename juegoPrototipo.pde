@@ -1,11 +1,12 @@
 import fisica.*;
 
 FWorld mundo;                  //DECLARO EL MUNDO
-boolean posicionando = false;  //variable para decidir si estamos en instacia de posicionar o no
+boolean posicionando = true;  //variable para decidir si estamos en instacia de posicionar o no
 boolean apuntar = false;       //variable para decidir si estamos en instancia de apuntar
 float sel = 0;                 //variable para ver qué ficha está seleccionada
 Jugador p1, p2;
-Base b1;
+
+FBox[] pared = new FBox[10];
 
 void setup() {
 
@@ -21,25 +22,41 @@ void setup() {
   mundo.setGravity(0, 0);
   mundo.setEdges();
 
-  b1 = new Base(mundo, 20, height/2, 5);
+  for (int i = 0; i<10; i++) {
+    pared[i] = new FBox(5, height/10);
+    pared[i].setPosition(width/2, i*height/10);
+    pared[i].setDensity(200);
+    mundo.add(pared[i]);
+  }
 
   //------inicializo el jugador------
-  p1 = new Jugador(mundo, 50, height/4, width, height/2, 200);
-  p2 = new Jugador(mundo, width-50, height/4, 0, height/2, -200);
+  p1 = new Jugador(mundo, 50, height/4, width, height/2, 200, 20, color(0, 0, 255));
+  p2 = new Jugador(mundo, width-50, height/4, 0, height/2, -200, width-100, color(255, 0, 0));
 }
 
 void draw() {
   background(255);
-  p1.dibujar(color(255, 0, 0));
-  p2.dibujar(color(0, 0, 255));
+  p1.dibujar();
+  p2.dibujar();
   if (frameCount%180 == 0 && p1.frenado() == false && p2.frenado() == false) {
     p1.disparar();
     p2.disparar();
   }
-  b1.actualizar();
-  mundo.drawDebug();
+
+  //mundo.drawDebug();
+  mundo.draw();
   mundo.step();
   //line(0, height/2, width, height/2);
+}
+
+void frenarJuego() {
+  if (p1.frenado() || p2.frenado()) {
+    p1.frenar();
+    p2.frenar();
+  } else {
+    p1.reanudar();
+    p2.reanudar();
+  }
 }
 
 void mouseReleased() {
@@ -52,11 +69,13 @@ void keyPressed() {
     p1.teclaSel(key);
     p2.teclaSel(key);
   }
-  if (key == 'd' || key == 'a') {
-    p1.tecla(key, 'd', 'a');
+  if (key == 'd' || key == 'a' || key == 'x') {
+    p1.tecla(mundo, key, 'd', 'a', 'x');
     p2.deSeleccionar();
-  } else if (key == 'l' || key == 'j') {
-    p2.tecla(key, 'l', 'j');
+    frenarJuego();
+  } else if (key == 'l' || key == 'j' || key == 'm') {
+    p2.tecla(mundo, key, 'l', 'j', 'm');
     p1.deSeleccionar();
+    frenarJuego();
   }
 }

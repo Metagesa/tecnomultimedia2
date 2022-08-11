@@ -2,21 +2,26 @@ class Jugador {
 
   FWorld mundo;
   Ficha c1, c2, c3;
+  Base base;
   float sel = 0;
+  color jugadorCol;
   boolean posicionando = false;  //variable para decidir si estamos en instacia de posicionar o no
   boolean apuntar = false;       //variable para decidir si estamos en instancia de apuntar
 
-  Jugador(FWorld w, float px, float py, float objX, float objY, float adelanto) {
+  Jugador(FWorld w, float px, float py, float objX, float objY, float adelanto, float bPos, color c) {
     mundo = w;
-    c1 = new Ficha(mundo, px, py, objX, objY);
-    c2 = new Ficha(mundo, px+adelanto, py*2, objX, objY);
-    c3 = new Ficha(mundo, px, py*3, objX, objY);
+    jugadorCol = c;
+    c1 = new Ficha(mundo, px, py, objX, objY, c, false);
+    c2 = new Ficha(mundo, px+adelanto, py*2, objX, objY, c, true);
+    c3 = new Ficha(mundo, px, py*3, objX, objY, c, false);
+    base = new Base(mundo, bPos, height/2, 5, c);
   }
 
-  void dibujar(color c) {
-    c1.dibujar(c);
-    c2.dibujar(c);
-    c3.dibujar(c);
+  void dibujar() {
+    c1.dibujar(jugadorCol);
+    c2.dibujar(jugadorCol);
+    c3.dibujar(jugadorCol);
+    base.actualizar();
     //if (frameCount%180 == 0 && !posicionando && !apuntar) {
     //  disparar(); //disparan las fichas
     //}
@@ -48,6 +53,18 @@ class Jugador {
     return (posicionando || apuntar);
   }
 
+  void frenar() {
+    c1.altoFuego();
+    c2.altoFuego();
+    c3.altoFuego();
+  }
+
+  void reanudar() {
+    c1.abrirFuego();
+    c2.abrirFuego();
+    c3.abrirFuego();
+  }
+
   void click() {
     if (posicionando && sel == 3) {        //si estoy en etapa de posición y con la pieza 3 seleccionada
       c3.setPos(mouseX, mouseY);           //posicionar sobre el mouse
@@ -69,7 +86,7 @@ class Jugador {
     }
   }
 
-  void tecla(char tecla, char p, char a) {
+  void tecla(FWorld w, char tecla, char p, char a, char x) {
     if (tecla == p) {
       //--------entro en modo de posicionar---------
       posicionando = !posicionando;
@@ -91,6 +108,19 @@ class Jugador {
         select(c1, false);
         select(c2, false);
         select(c3, false);
+      }
+    } else if (tecla == x) {
+      println("si");
+      if (posicionando || apuntar) {
+        if (sel==1) {
+          c1.cambioFicha(w);
+        } 
+        if (sel==2) {
+          c2.cambioFicha(w);
+        } 
+        if (sel==3) {
+          c3.cambioFicha(w);
+        }
       }
     }
   }

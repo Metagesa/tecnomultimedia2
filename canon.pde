@@ -1,25 +1,27 @@
 class Canon {
 
-  FCircle bala;
+  float tam;
   FWorld mundo;
   float angulo;
+  FCircle bala;
 
   //--------Constructor: inicializo la bala, cargo como parámetros el mundo y el tamaño
   //--------de la bala.
-  Canon(FWorld w, float tam) {
+  Canon(FWorld w, float t) {
+    mundo = w;
+    tam = t;
     bala = new FCircle(tam);
-    bala.setPosition(-width/2, -height/2);
     bala.setDensity(20);
     bala.setRestitution(0.5);
-    mundo = w;
-    mundo.add(bala); //agrego la bala al mundo
+    bala.setPosition(-width, -height);
+    mundo.add(bala);
   }
 
-  void impulsar() {
+  void impulsar(FBody b) {
     //----setVelocity: mueve el FCircle bala a una cierta velocidad en x e y
     //usando seno y coseno hacemos que la velocidad dada sea hacia el angulo que usamos como
     //parametro.
-    bala.setVelocity(cos(angulo)*1000, sin(angulo)*1000);
+    b.setVelocity(cos(angulo)*1000, sin(angulo)*1000);
   }
 
   void disparo(float posX, float posY, float objX, float objY) {
@@ -28,10 +30,23 @@ class Canon {
     //movemos la bala a la posición de la que sale (40 pixeles fuera del centro de la ficha)
     bala.setPosition(posX+(40*cos(angulo)), posY+(40*sin(angulo)));
     //le damos velocidad a la bala
-    impulsar();
+    impulsar(bala);
   }
 
-  FBody getBala() {
-    return bala;
+  void actualizar() {
+  }
+
+  void altoFuego() {
+    bala.removeFromWorld();
+  }
+
+  void abrirFuego() {
+    bala.removeFromWorld();
+    mundo.add(bala);
+  }
+
+  void remover() {
+    bala.setPosition(-width, -height);
+    mundo.remove(bala);
   }
 }
