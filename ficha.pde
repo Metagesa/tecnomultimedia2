@@ -58,7 +58,7 @@ class Ficha {
     if (canon) {
       dibujarCanon(c);
     } else {
-      dibujarTorre();
+      dibujarTorre(c);
       torre.actualizar();
     }
   }
@@ -76,37 +76,21 @@ class Ficha {
     pop();
   }
 
-  void dibujarTorre() {
+  void dibujarTorre(color c) {
     push();
     if (select) {
       colFicha = color(200, 100, 100);
     } else {
-      colFicha = color(128);
+      colFicha = color(c);
     }
     noFill();
-    stroke(colFicha);
-    strokeWeight(2);
+    stroke(0);
+    strokeWeight(4);
     circle(x, y, tam*2);
+    stroke(c);
+    arc(x, y, tam*2, tam*2, 0, map(torre.vida(), 0, 100, 0, TWO_PI));
     pop();
   }
-
-  //void dibujarTorre() {
-  //  push();
-  //  if (select) {
-  //    colFicha = color(200, 100, 100);
-  //  } else {
-  //    colFicha = color(128);
-  //  }
-  //  rectMode(CENTER);
-  //  fill(colFicha);
-  //  noStroke();
-  //  rect(x-(tamTorre*distribTorre)/2, y, torre.tamano()*1.5, torre.tamano()*1.5);
-  //  noFill();
-  //  stroke(0);
-  //  strokeWeight(2);
-  //  rect(x-(tamTorre*distribTorre)/2, y, torre.tamano()*1.8, torre.tamano()*1.8);
-  //  pop();
-  //}
 
   void setPos(float posX, float posY) {
     if (canon) {
@@ -115,6 +99,8 @@ class Ficha {
       ficha.setPosition(posX, posY);
       torre.mover(posX, posY);
     }
+    x = posX;
+    y = posY;
   }
 
   void seleccionar() {

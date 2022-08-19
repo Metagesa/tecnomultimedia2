@@ -30,7 +30,7 @@ class Torre {
       }
       cuerpo[i] = new FBox(tam, tam);
       cuerpo[i].setPosition(x+px, y+py);
-      cuerpo[i].setDensity(200);
+      cuerpo[i].setDensity(35000);
       cuerpo[i].setNoStroke();
       cuerpo[i].setFill(red(c), green(c), blue(c));
       cuerpo[i].setGrabbable(false);
@@ -45,7 +45,7 @@ class Torre {
       if (dist(cuerpoX[i], cuerpoY[i], cuerpo[i].getX(), cuerpo[i].getY()) > tam*3) {
         mundo.remove(cuerpo[i]);
         muertes++;
-        vida = map(muertes, 0, 50, 100, 0);
+        vida = map(muertes, 0, cant, 100, 0);
         println(vida);
       }
     }

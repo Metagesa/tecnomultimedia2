@@ -26,13 +26,24 @@ class Base {
       }
       cuerpo[i] = new FBox(tam, tam);
       cuerpo[i].setPosition(x+px, y+py);
-      cuerpo[i].setDensity(100);
+      cuerpo[i].setDensity(20000);
       cuerpo[i].setNoStroke();
       cuerpo[i].setFill(red(c), green(c), blue(c));
       cuerpoX[i] = cuerpo[i].getX();
       cuerpoY[i] = cuerpo[i].getY();
       mundo.add(cuerpo[i]);
     }
+  }
+
+  void dibujarVida(float posx, float posy, color c) {
+    push();
+    rectMode(CENTER);
+    fill(0);
+    noStroke();
+    rect(posx, posy, 200, 20);
+    fill(c);
+    rect(posx-map(vida, 0, 100, 100, 0), posy, map(vida, 0, 100, 0, 200), 20);
+    pop();
   }
 
   void actualizar() {

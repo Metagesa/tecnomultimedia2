@@ -11,7 +11,7 @@ class Canon {
     mundo = w;
     tam = t;
     bala = new FCircle(tam);
-    bala.setDensity(20);
+    bala.setDensity(2500);
     bala.setRestitution(0.5);
     bala.setPosition(-width, -height);
     mundo.add(bala);

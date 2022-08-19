@@ -3,18 +3,26 @@ class Jugador {
   FWorld mundo;
   Ficha c1, c2, c3;
   Base base;
+  Tablero t;
   float sel = 0;
+  float adelanto;
   color jugadorCol;
   boolean posicionando = false;  //variable para decidir si estamos en instacia de posicionar o no
   boolean apuntar = false;       //variable para decidir si estamos en instancia de apuntar
 
-  Jugador(FWorld w, float px, float py, float objX, float objY, float adelanto, float bPos, color c) {
+  Jugador(FWorld w, float px, float py, float objX, float objY, float a, float bPos, boolean j1) {
     mundo = w;
-    jugadorCol = c;
-    c1 = new Ficha(mundo, px, py, objX, objY, c, false);
-    c2 = new Ficha(mundo, px+adelanto, py*2, objX, objY, c, true);
-    c3 = new Ficha(mundo, px, py*3, objX, objY, c, false);
-    base = new Base(mundo, bPos, height/2, 5, c);
+    adelanto = a;
+    if (j1) {
+      jugadorCol = color(255, 0, 0);
+    } else {
+      jugadorCol = color(0, 0, 255);
+    }
+    t = new Tablero(j1);
+    c1 = new Ficha(mundo, px, py, objX, objY, jugadorCol, false);
+    c2 = new Ficha(mundo, px+adelanto, py*2, objX, objY, jugadorCol, true);
+    c3 = new Ficha(mundo, px, py*3, objX, objY, jugadorCol, false);
+    base = new Base(mundo, bPos, height/2, 5, jugadorCol);
   }
 
   void dibujar() {
@@ -22,6 +30,7 @@ class Jugador {
     c2.dibujar(jugadorCol);
     c3.dibujar(jugadorCol);
     base.actualizar();
+    base.dibujarVida(width/2-adelanto, 50, jugadorCol);
     //if (frameCount%180 == 0 && !posicionando && !apuntar) {
     //  disparar(); //disparan las fichas
     //}
@@ -68,10 +77,13 @@ class Jugador {
   void click() {
     if (posicionando && sel == 3) {        //si estoy en etapa de posición y con la pieza 3 seleccionada
       c3.setPos(mouseX, mouseY);           //posicionar sobre el mouse
+      t.checkPos(c3, c3.posX(), c3.posY());
     } else if (posicionando && sel == 2) { //si estoy en etapa de posición y con la pieza 2 seleccionada
       c2.setPos(mouseX, mouseY);           //posicionar sobre el mouse
+      t.checkPos(c2, c2.posX(), c2.posY());
     } else if (posicionando && sel == 1) { //si estoy en etapa de posición y con la pieza 1 seleccionada
       c1.setPos(mouseX, mouseY);           //posicionar sobre el mouse
+      t.checkPos(c1, c1.posX(), c1.posY());
     } else {
       //c1.disparo();      //no usar de esta forma, era una prueba
       //c2.disparo();      //no usar de esta forma, era una prueba
@@ -114,10 +126,10 @@ class Jugador {
       if (posicionando || apuntar) {
         if (sel==1) {
           c1.cambioFicha(w);
-        } 
+        }
         if (sel==2) {
           c2.cambioFicha(w);
-        } 
+        }
         if (sel==3) {
           c3.cambioFicha(w);
         }
