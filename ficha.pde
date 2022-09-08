@@ -4,6 +4,9 @@ class Ficha {
   Canon disparo;
   Torre torre;
   FWorld mundo;
+
+  Ficha fichas[] = new Ficha[3];
+
   color colFicha = color(255, 0, 0);
   boolean select = false;
   float tam = 50;
@@ -18,16 +21,13 @@ class Ficha {
   float miraX;
   float miraY;
 
+  int posicionTablero = -1;
+
   float vida = 100;
 
-  Ficha(FWorld w, color col) {
-    mundo = w;
-    colFicha = col;
-    inicializar(col);
-  }
-
-  Ficha(FWorld w, float posX, float posY, float objX, float objY, color col, boolean c) {
+  Ficha(FWorld w, Ficha f[], float posX, float posY, float objX, float objY, color col, boolean c, Tablero t) {
     canon = c;
+    fichas = f;
     colFicha = col;
     x = posX;
     y = posY;
@@ -35,6 +35,7 @@ class Ficha {
     miraY = objY;
     mundo = w;
     inicializar(col);
+    t.checkPos(this, fichas, x, y);
   }
 
   void inicializar(color col) {
@@ -92,7 +93,7 @@ class Ficha {
     pop();
   }
 
-  void setPos(float posX, float posY) {
+  void setPos(float posX, float posY, Tablero t) {
     if (canon) {
       ficha.setPosition(posX, posY);
     } else {
@@ -101,6 +102,14 @@ class Ficha {
     }
     x = posX;
     y = posY;
+  }
+
+  void setPosEnTablero(int posT) {
+    posicionTablero = posT;
+  }
+
+  int posEnTablero() {
+    return posicionTablero;
   }
 
   void seleccionar() {

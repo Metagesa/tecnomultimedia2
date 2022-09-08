@@ -2,6 +2,7 @@ class Jugador {
 
   FWorld mundo;
   Ficha c1, c2, c3;
+  Ficha fichas[] = new Ficha[]{c1, c2, c3};
   Base base;
   Tablero t;
   float sel = 0;
@@ -18,10 +19,10 @@ class Jugador {
     } else {
       jugadorCol = color(0, 0, 255);
     }
-    t = new Tablero(j1);
-    c1 = new Ficha(mundo, px, py, objX, objY, jugadorCol, false);
-    c2 = new Ficha(mundo, px+adelanto, py*2, objX, objY, jugadorCol, true);
-    c3 = new Ficha(mundo, px, py*3, objX, objY, jugadorCol, false);
+    t = new Tablero(j1, fichas);
+    c1 = new Ficha(mundo, fichas, px, py, objX, objY, jugadorCol, false, t);
+    c2 = new Ficha(mundo, fichas, px+adelanto, py*2, objX, objY, jugadorCol, true, t);
+    c3 = new Ficha(mundo, fichas, px, py*3, objX, objY, jugadorCol, false, t);
     base = new Base(mundo, bPos, height/2, 5, jugadorCol);
   }
 
@@ -31,6 +32,7 @@ class Jugador {
     c3.dibujar(jugadorCol);
     base.actualizar();
     base.dibujarVida(width/2-adelanto, 50, jugadorCol);
+    fichas = new Ficha[]{c1, c2, c3};
     //if (frameCount%180 == 0 && !posicionando && !apuntar) {
     //  disparar(); //disparan las fichas
     //}
@@ -76,14 +78,14 @@ class Jugador {
 
   void click() {
     if (posicionando && sel == 3) {        //si estoy en etapa de posición y con la pieza 3 seleccionada
-      c3.setPos(mouseX, mouseY);           //posicionar sobre el mouse
-      t.checkPos(c3, c3.posX(), c3.posY());
+      c3.setPos(mouseX, mouseY, t);           //posicionar sobre el mouse
+      t.checkPos(c3, fichas, c3.posX(), c3.posY());
     } else if (posicionando && sel == 2) { //si estoy en etapa de posición y con la pieza 2 seleccionada
-      c2.setPos(mouseX, mouseY);           //posicionar sobre el mouse
-      t.checkPos(c2, c2.posX(), c2.posY());
+      c2.setPos(mouseX, mouseY, t);           //posicionar sobre el mouse
+      t.checkPos(c2, fichas, c2.posX(), c2.posY());
     } else if (posicionando && sel == 1) { //si estoy en etapa de posición y con la pieza 1 seleccionada
-      c1.setPos(mouseX, mouseY);           //posicionar sobre el mouse
-      t.checkPos(c1, c1.posX(), c1.posY());
+      c1.setPos(mouseX, mouseY, t);           //posicionar sobre el mouse
+      t.checkPos(c1, fichas, c1.posX(), c1.posY());
     } else {
       //c1.disparo();      //no usar de esta forma, era una prueba
       //c2.disparo();      //no usar de esta forma, era una prueba
