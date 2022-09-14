@@ -30,12 +30,13 @@ class Torre {
       }
       cuerpo[i] = new FBox(tam, tam);
       cuerpo[i].setPosition(x+px, y+py);
-      cuerpo[i].setDensity(35000);
+      cuerpo[i].setDensity(35000*2);
       cuerpo[i].setNoStroke();
       cuerpo[i].setFill(red(c), green(c), blue(c));
       cuerpo[i].setGrabbable(false);
       cuerpoX[i] = cuerpo[i].getX();
       cuerpoY[i] = cuerpo[i].getY();
+      cuerpo[i].setName("estructura");
       mundo.add(cuerpo[i]);
     }
   }

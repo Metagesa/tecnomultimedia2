@@ -25,9 +25,8 @@ class Ficha {
 
   float vida = 100;
 
-  Ficha(FWorld w, Ficha f[], float posX, float posY, float objX, float objY, color col, boolean c, Tablero t) {
+  Ficha(FWorld w, float posX, float posY, float objX, float objY, color col, boolean c) {
     canon = c;
-    fichas = f;
     colFicha = col;
     x = posX;
     y = posY;
@@ -35,7 +34,6 @@ class Ficha {
     miraY = objY;
     mundo = w;
     inicializar(col);
-    t.checkPos(this, fichas, x, y);
   }
 
   void inicializar(color col) {
@@ -93,7 +91,7 @@ class Ficha {
     pop();
   }
 
-  void setPos(float posX, float posY, Tablero t) {
+  void setPos(float posX, float posY) {
     if (canon) {
       ficha.setPosition(posX, posY);
     } else {
@@ -120,21 +118,9 @@ class Ficha {
     select = false;
   }
 
-  void altoFuego() {
+  void disparo(ArrayList bal) {
     if (canon) {
-      disparo.altoFuego();
-    }
-  }
-
-  void abrirFuego() {
-    if (canon) {
-      disparo.abrirFuego();
-    }
-  }
-
-  void disparo() {
-    if (canon) {
-      disparo.disparo(x, y, miraX, miraY);
+      disparo.disparo(x, y, miraX, miraY, bal);
     }
   }
 
@@ -148,7 +134,6 @@ class Ficha {
     if (canon) {
       torre.remover(w);
     } else {
-      disparo.remover();
       w.remove(ficha);
     }
     inicializar(colFicha);

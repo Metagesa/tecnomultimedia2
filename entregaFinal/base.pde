@@ -31,6 +31,7 @@ class Base {
       cuerpo[i].setFill(red(c), green(c), blue(c));
       cuerpoX[i] = cuerpo[i].getX();
       cuerpoY[i] = cuerpo[i].getY();
+      cuerpo[i].setName("estructura");
       mundo.add(cuerpo[i]);
     }
   }
