@@ -11,6 +11,8 @@ Jugador p1, p2;
 int turnos = 0;
 float tiempoTurno = 20000;
 
+boolean cambioTurno = true;
+
 tablero tab;
 
 long contadorParcial = 0;
@@ -88,6 +90,12 @@ void draw() {
       p1.cambioEtapa();
       p2.cambioEtapa();
       posicionando = !posicionando;
+      cambioTurno = !cambioTurno;
+        if (cambioTurno) {
+        p1.reinicioFichas();
+        p2.reinicioFichas();
+        cambioTurno = false;
+      }
       contadorParcial = millis();
       turnos += 1;
     }
@@ -111,7 +119,7 @@ void draw() {
 
     println(p1.vida());
     println(p2.vida());
-    
+
     if (turnos > 5) {
       if (p2.vida() == p1.vida()) {
         pantalla = 4;
@@ -208,6 +216,39 @@ void contactStarted(FContact c) {
   if (c.contains("bala", "estructura")) {
     if (golpe.isPlaying() == false) {
       golpe.play();
+    }
+  }
+
+  if (c.contains("bala", "canon")) {
+    FBody cuerpo1 = c.getBody1();
+    FBody cuerpo2 = c.getBody2();
+    float cuerpox = -10;
+    float cuerpoy = -10;
+    boolean canonEncontrado = false;
+
+    if (cuerpo1.getName().equals("canon")) {
+      cuerpox = cuerpo1.getX();
+      cuerpoy = cuerpo1.getY();
+    } else if (cuerpo2.getName().equals("canon")) {
+      cuerpox = cuerpo2.getX();
+      cuerpoy = cuerpo2.getY();
+    }
+
+    if (cuerpox >= 0 && cuerpoy >= 0) {
+      for (int i = 0; i < 3; i++) {
+        if (cuerpox == p1.getFichas()[i].posX() && cuerpoy == p1.getFichas()[i].posY()) {
+          p1.getFichas()[i].atacarCanon();
+          canonEncontrado = true;
+        }
+      }
+      if (!canonEncontrado) {
+        for (int i = 0; i < 3; i++) {
+          if (cuerpox == p2.getFichas()[i].posX() && cuerpoy == p2.getFichas()[i].posY()) {
+            p2.getFichas()[i].atacarCanon();
+            canonEncontrado = true;
+          }
+        }
+      }
     }
   }
 }

@@ -16,6 +16,9 @@ class Ficha {
   float y = 0;
 
   boolean canon;
+  boolean destruido = false;
+
+  float impactos = 0;
 
   float distribTorre = 8;
   float tamTorre = 5;
@@ -60,9 +63,20 @@ class Ficha {
     ficha.setPosition(x, y);
     ficha.setStatic(true);
     ficha.setDrawable(false);
+    ficha.setName("canon");
     if (canon) {
       mundo.add(ficha);
     }
+  }
+
+  void reiniciar() {
+    if (canon) {
+      revivirCanon();
+      mundo.remove(ficha);
+    } else {
+      torre.remover(mundo);
+    }
+    inicializar(colFicha);
   }
 
   void dibujar(color c) {
@@ -78,21 +92,41 @@ class Ficha {
 
   void dibujarCanon(color c) {
     push();
-    //noStroke();
     if (select) {
       tint(255, 0, 255);
-      //colFicha = color(200, 100, 100);
+      if (destruido) {
+        tint(128, 0, 128);
+      }
     } else {
       tint(255);
-      //colFicha = c;
+      if (destruido) {
+        tint(128);
+      }
     }
-    //fill(colFicha);
-    //circle(x, y, tam);
     imageMode(CENTER);
     translate(x, y);
     rotate(PI+atan2(miraY-y, miraX-x));
     image(torreta, 0, 0);
     pop();
+  }
+
+  void destruirCanon() {
+    destruido = true;
+    ficha.setSensor(true);
+  }
+
+  void atacarCanon() {
+    if (impactos < 2) {
+      impactos++;
+    } else {
+      destruirCanon();
+      impactos = 0;
+    }
+  }
+
+  void revivirCanon() {
+    destruido = false;
+    ficha.setSensor(false);
   }
 
   void dibujarTorre(color c) {
@@ -141,7 +175,9 @@ class Ficha {
 
   void disparo(ArrayList bal) {
     if (canon) {
-      disparo.disparo(x, y, miraX, miraY, bal);
+      if (!destruido) {
+        disparo.disparo(x, y, miraX, miraY, bal);
+      }
     }
   }
 

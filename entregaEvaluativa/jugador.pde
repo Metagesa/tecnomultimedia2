@@ -3,6 +3,7 @@ class Jugador {
   FWorld mundo;
   SoundFile laser;
   Ficha c1, c2, c3;
+  Ficha[] fichas = new Ficha[3];
   Base base;
   ArrayList <FCircle> balas;
   float sel = 0;
@@ -28,6 +29,9 @@ class Jugador {
     c1 = new Ficha(mundo, px, py, objX, objY, jugadorCol, false);
     c2 = new Ficha(mundo, px+adelanto, py*2, objX, objY, jugadorCol, true);
     c3 = new Ficha(mundo, px, py*3, objX, objY, jugadorCol, false);
+    fichas[0] = c1;
+    fichas[1] = c2;
+    fichas[2] = c3;
     base = new Base(mundo, bPos, height/2, 5, jugadorCol);
     balas = new ArrayList<FCircle>();
   }
@@ -73,6 +77,12 @@ class Jugador {
     etapaPos = b;
   }
 
+  void reinicioFichas() {
+    c1.reiniciar();
+    c2.reiniciar();
+    c3.reiniciar();
+  }
+
   void disparar() {
     c1.disparo(balas);   //disparar la ficha 1
     c2.disparo(balas);   //disparar la ficha 2
@@ -101,18 +111,6 @@ class Jugador {
   boolean frenado() {
     return (etapaPos);
   }
-
-  //void frenar() {
-  //  c1.altoFuego();
-  //  c2.altoFuego();
-  //  c3.altoFuego();
-  //}
-
-  //void reanudar() {
-  //  c1.abrirFuego();
-  //  c2.abrirFuego();
-  //  c3.abrirFuego();
-  //}
 
   void click() {
     if (posicionando && sel == 3) {        //si estoy en etapa de posición y con la pieza 3 seleccionada
@@ -193,6 +191,10 @@ class Jugador {
         select(c3, true);
       }
     }
+  }
+
+  Ficha[] getFichas() {
+    return fichas;
   }
 
   float vida() {
